@@ -1,0 +1,1 @@
+$ curl --data '{"method":"parity_pendingTransactions","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X https://responsive-dark-mountain.ethereum-goerli.discover.quiknode.pro/098290c301d6e1e94245618de1d4b8ac4faaa1da/
