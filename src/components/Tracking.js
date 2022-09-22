@@ -11,9 +11,18 @@ function Tracking() {
     const [ txns, setTxns ] = useState([]) 
     // State for Modal
     const [isOpen, setIsOpen] = useState(false);
+    // State for Tx Filters
+    const [txFilter, setTxFilter] = useState('all')
+
 
     function toggleModal() {
         setIsOpen(!isOpen);
+    }
+
+    // Set Tx Filters
+    const setFilter = (e) => {
+        const value = e.target.value;
+        setTxFilter(value);
     }
 
     const fetchData = () => {
@@ -77,9 +86,10 @@ function Tracking() {
                                                     }
                                                   }}
                                                 >
-                                                    <div>tx.value <input></input><br/>
-                                                        tx.to <input></input><br/>
-                                                        tx.from <input></input>
+                                                    <div>
+                                                        tx.value <input type="text" onChange={setFilter} value={txFilter.value}></input><br/> 
+                                                        tx.to <input type="text" onChange={setFilter} value={txFilter.to}></input><br/>
+                                                        tx.from <input type="text" onChange={setFilter} value={txFilter.from}></input>
                                                     </div>
                                                     <button>Apply</button>
                                                     <button onClick={toggleModal}>Close</button>
