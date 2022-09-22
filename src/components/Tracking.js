@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import styled from "styled-components/macro";
+import styled from "styled-components/macro"
+
 
 function Tracking() {
 
-    const [data, setData] = useState(null)
+    const [ txns, setTxns ] = useState([]) // array of transactions fetched from the backend
 
     const fetchData = () => {
         try {
             axios.get('http://localhost:3001/transactions-data').then(res => {
-                setData(res.data)
+                setTxns(prevState => {
+                    return [...prevState, res.data]
+                })
             })
         } catch(e) {
             console.log(e)
@@ -50,11 +53,17 @@ function Tracking() {
             </AddressTracker>
         </UserInterface>
         <Output>
-            {data && (
-                <div>
-                    {JSON.stringify(data)}
-                </div>
-            )}
+        {txns.slice(-15).map((txn, index) => (
+            <TxnWrapper key={index}>
+                {/* {JSON.stringify(txn)} */}
+                <p>Hash: <OutputText>{JSON.stringify(txn.hash)}</OutputText></p>
+                <InnerWrapper>
+                    <p>Nonce: {JSON.stringify(txn.nonce)}</p>
+                    <p>From: {JSON.stringify(txn.from)}</p>
+                    <p>To: {JSON.stringify(txn.to)}</p>
+                </InnerWrapper>
+            </TxnWrapper>
+        ))}
         </Output>
     </Body>
   )
@@ -123,12 +132,28 @@ const GlobalFiltersUITopContentModal = styled.div`
 `
 
 const Output = styled.div`
-    background-color: #515151;
+    background-color: black;
     width: 50vw;
     height: 100%;
+    overflow: auto;
+    border-radius: 25px;
     p {
-        margin: 1.5rem;
         color: #A464D5;
+    }
+`
+
+const TxnWrapper = styled.div`
+    marin: 10px;
+    padding-left: 1rem;
+`
+
+const OutputText = styled.span`
+    color: green;
+`
+
+const InnerWrapper = styled.div`
+    p {
+        margin-left: 1rem;
     }
 `
 

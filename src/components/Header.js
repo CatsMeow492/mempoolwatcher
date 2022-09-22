@@ -38,20 +38,6 @@ const Nav = styled.nav`
     z-index: 3;
 `;
 
-const Logo = styled.img`
-    display: inline-block;
-    padding: 0;
-    width: 80px;
-    margin-top: 4px;
-    margin-right: 10;
-    max-height: 70px;
-    font-size: 0;
-    
-    img {
-        display: block;
-        width: 100%;
-    }
-`;
 
 const NavMenu = styled.div`
     align-items: center;
