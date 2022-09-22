@@ -1,0 +1,7 @@
+.Modal-backdrop {
+    z-index: 100000 !important;
+  }
+
+  .Modal {
+    z-index: 100001 !important;
+  }

@@ -9,13 +9,7 @@ function Header() {
                 <img src='/images/coinbase.svg' alt='HOME' />
             <span>MemPool Watcher</span>
             </a>            
-        </NavMenu>
-        <SignOut>
-            <DropDown>
-            </DropDown>
-        </SignOut>
-
-        
+        </NavMenu>        
     </Nav>
     
     ) 
@@ -45,7 +39,7 @@ const NavMenu = styled.div`
     flex-flow: row nowrap;
     height: 100%;
     justify-content: flex-end;
-    padding: 5%;
+    padding: 0px;
     position: relative;
     margin-right: auto;
     margin-left: 25px;

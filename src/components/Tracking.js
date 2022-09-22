@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import styled from "styled-components/macro"
+import Modal from "react-modal";
+import './Tracking.css'
 
+Modal.setAppElement("#root");
 
 function Tracking() {
+    // State for Transactions Array
+    const [ txns, setTxns ] = useState([]) 
+    // State for Modal
+    const [isOpen, setIsOpen] = useState(false);
 
-    const [ txns, setTxns ] = useState([]) // array of transactions fetched from the backend
+    function toggleModal() {
+        setIsOpen(!isOpen);
+    }
 
     const fetchData = () => {
         try {
@@ -37,7 +46,45 @@ function Tracking() {
                                 <GlobalFiltersUITopContent1>
                                     <h4>Global Filters</h4>
                                     <GlobalFiltersUITopContentModal>
-                                        + Global Filter
+                                        <div className="App">
+                                            <button onClick={toggleModal}>+ Global Filters</button>
+                                            <Modal
+                                                isOpen={isOpen}
+                                                onRequestClose={toggleModal}
+                                                contentLabel="My dialog"
+                                                style={{
+                                                    overlay: {
+                                                      position: 'fixed',
+                                                      top: 0,
+                                                      left: 0,
+                                                      right: 0,
+                                                      bottom: 0,
+                                                      backgroundColor: 'rgba(255, 255, 255, 0.75)'
+                                                    },
+                                                    content: {
+                                                      position: 'absolute',
+                                                      top: '8rem',
+                                                      left: '40px',
+                                                      right: '40px',
+                                                      bottom: '40px',
+                                                      border: '1px solid #ccc',
+                                                      background: '#fff',
+                                                      overflow: 'auto',
+                                                      WebkitOverflowScrolling: 'touch',
+                                                      borderRadius: '4px',
+                                                      outline: 'none',
+                                                      padding: '20px'
+                                                    }
+                                                  }}
+                                                >
+                                                    <div>tx.value <input></input><br/>
+                                                        tx.to <input></input><br/>
+                                                        tx.from <input></input>
+                                                    </div>
+                                                    <button>Apply</button>
+                                                    <button onClick={toggleModal}>Close</button>
+                                                </Modal>
+                                        </div>
                                     </GlobalFiltersUITopContentModal>
                                 </GlobalFiltersUITopContent1>
                                     <p>Status: Pending Transactions</p>
@@ -56,11 +103,12 @@ function Tracking() {
         {txns.slice(-15).map((txn, index) => (
             <TxnWrapper key={index}>
                 {/* {JSON.stringify(txn)} */}
-                <p>Hash: <OutputText>{JSON.stringify(txn.hash)}</OutputText></p>
+                <p>Hash: <HashText>{JSON.stringify(txn.hash)}</HashText></p>
                 <InnerWrapper>
                     <p>Nonce: {JSON.stringify(txn.nonce)}</p>
                     <p>From: {JSON.stringify(txn.from)}</p>
                     <p>To: {JSON.stringify(txn.to)}</p>
+                    <p>Value: <ValueText>{JSON.stringify(txn.value)}</ValueText></p>
                 </InnerWrapper>
             </TxnWrapper>
         ))}
@@ -147,7 +195,7 @@ const TxnWrapper = styled.div`
     padding-left: 1rem;
 `
 
-const OutputText = styled.span`
+const HashText = styled.span`
     color: green;
 `
 
@@ -155,6 +203,10 @@ const InnerWrapper = styled.div`
     p {
         margin-left: 1rem;
     }
+`
+
+const ValueText = styled.span`
+    color: red;
 `
 
 export default Tracking
