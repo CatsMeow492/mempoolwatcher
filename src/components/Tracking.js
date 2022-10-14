@@ -44,6 +44,9 @@ function Tracking() {
        }, [1000])
     }, [])
 
+    // Array of Addresses to Track
+    const addressesToTrack = []
+
   return (
     <Body>
         <UserInterface>
@@ -87,7 +90,7 @@ function Tracking() {
                                                   }}
                                                 >
                                                     <div>
-                                                        tx.value <input type="text" onChange={setFilter} value={txFilter.value}></input><br/> 
+                                                        tx.value <input type="text" onChange={setFilter} value={txFilter.value}></input><br/> <p>{txFilter.value}</p> 
                                                         tx.to <input type="text" onChange={setFilter} value={txFilter.to}></input><br/>
                                                         tx.from <input type="text" onChange={setFilter} value={txFilter.from}></input>
                                                     </div>
@@ -101,13 +104,18 @@ function Tracking() {
                             </GlobalFiltersUITopContent>
                         </GlobalFiltersUITop>
                     </GlobalFiltersUIMain>
+                    <AddressTracker>
+                    <SubscriptionContainer>
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="0x..."></input>
+                    </SubscriptionContainer>
+                    </AddressTracker>
                 </GlobalFiltersInner>
             </GlobalFiltersOuter>
-            <AddressTracker>
-                <SubscriptionContainer>
-
-                </SubscriptionContainer>
-            </AddressTracker>
+            <UserInputContainer>
+                <UserInput>
+                </UserInput>
+            </UserInputContainer>
         </UserInterface>
         <Output>
         {txns.slice(-15).map((txn, index) => (
@@ -217,6 +225,14 @@ const InnerWrapper = styled.div`
 
 const ValueText = styled.span`
     color: red;
+`
+
+const UserInputContainer = styled.div`
+    width: 50vw;
+`
+
+const UserInput = styled.form`
+
 `
 
 export default Tracking
