@@ -45,7 +45,8 @@ function Tracking() {
     }, [])
 
     // Array of Addresses to Track
-    const addressesToTrack = []
+    const [address, setAddress] = useState('')
+    const [addressesToTrack, setAddressesToTrack] = useState([])
 
   return (
     <Body>
@@ -107,7 +108,22 @@ function Tracking() {
                     <AddressTracker>
                     <SubscriptionContainer>
                         <label for="address">Address</label>
-                        <input type="text" id="address" name="address" placeholder="0x..."></input>
+                        <AddressInput value={address} type="text" id="address" name="address" placeholder="0x..." onChange={(e) => setAddress(e.target.value)}></AddressInput>
+                        <button onClick={() => {
+                            if (!address) {
+                                return
+                            }
+                            setAddressesToTrack(prevState => {
+                                return [...prevState, address]
+                            })
+                            setAddress('')
+                        }}>Add Address</button>
+
+                        {addressesToTrack.map((address, index) => (
+                            <SubscribedAddressContainer key={index}>
+                                <AddressTitle>{address}</AddressTitle>
+                            </SubscribedAddressContainer>
+                        ))}
                     </SubscriptionContainer>
                     </AddressTracker>
                 </GlobalFiltersInner>
@@ -232,7 +248,22 @@ const UserInputContainer = styled.div`
 `
 
 const UserInput = styled.form`
+    margin-left: 1rem;
+`
 
+const AddressInput = styled.input`
+    margin-left: .5rem;
+`
+
+const SubscribedAddressContainer = styled.div`
+    width: 100%;
+    height: 7.3rem;
+    outline: 1px solid black;
+    border-radius: 25px;
+`
+
+const AddressTitle = styled.h1`
+    margin-left: 1rem;
 `
 
 export default Tracking
