@@ -25,3 +25,5 @@ let fetchOneByKey = function () {
         }
     });
 }
+
+fetchOneByKey();
