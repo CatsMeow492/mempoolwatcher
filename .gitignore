@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/backend/node_modules
 
 # testing
 /coverage
@@ -22,3 +23,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 tomato-echidna
+
+# secrets
+/backend/.env
