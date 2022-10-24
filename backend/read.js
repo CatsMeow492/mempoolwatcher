@@ -9,21 +9,37 @@ let awsConfig = {
 AWS.config.update(awsConfig);
 // create a document client
 let docClient = new AWS.DynamoDB.DocumentClient();
-// read a single item
-let fetchOneByKey = function () {
+// read a single item based on user input
+let readItem = function (req, res) {
     let params = {
         TableName: "users",
         Key: {
-            "email_id": "example@example.com"
+            "id": req.params.id
         }
     };
     docClient.get(params, function (err, data) {
         if (err) {
-            console.log("users::readSingleItem::error - " + JSON.stringify(err, null, 2));
+            res.status(500).json({ error: "Could not load items: " + err.message });
         } else {
-            console.log("users::readSingleItem::success - " + JSON.stringify(data, null, 2));
+            res.json(data);
         }
     });
 }
+// let fetchOneByKey = function () {
+//     let params = {
+//         TableName: "users",
+//         Key: {
+//             "email_id": "example@example.com"
+//         }
+//     };
+//     docClient.get(params, function (err, data) {
+//         if (err) {
+//             console.log("users::readSingleItem::error - " + JSON.stringify(err, null, 2));
+//         } else {
+//             console.log("users::readSingleItem::success - " + JSON.stringify(data, null, 2));
+//         }
+//     });
+// }
 
-fetchOneByKey();
+// fetchOneByKey();
+module.exports = readItem;

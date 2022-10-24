@@ -14,6 +14,20 @@ function Tracking() {
     // State for Tx Filters
     const [txFilter, setTxFilter] = useState('all')
 
+    // Fetch addresseToTrack from API
+    useEffect(() => {
+        axios.get('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses')
+        .then(res => {
+            // For each object in res.data get address property and add to an array
+            const addresses = res.data.Items.map(obj => obj.Address)
+            // Set addresses array to state
+            setAddressesToTrack(addresses)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }, [])
+
 
     function toggleModal() {
         setIsOpen(!isOpen);
