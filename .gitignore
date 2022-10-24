@@ -26,3 +26,4 @@ tomato-echidna
 
 # secrets
 /backend/.env
+.env
