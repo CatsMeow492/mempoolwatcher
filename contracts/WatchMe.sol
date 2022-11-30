@@ -63,5 +63,15 @@ contract WatchMe is ERC20 {
     function pause() external onlyOwner {
         paused = true;
     }
+    // function to unpause the contract
+    function unpause() external onlyOwner {
+        paused = false;
+    }
+    // pausable transfer function
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        require(!paused, "Contract is paused");
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
 
 }
