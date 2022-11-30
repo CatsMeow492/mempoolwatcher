@@ -271,13 +271,14 @@ const AddressInput = styled.input`
 
 const SubscribedAddressContainer = styled.div`
     width: 100%;
-    height: 7.3rem;
+    height: 2.3rem;
     outline: 1px solid black;
     border-radius: 25px;
 `
 
-const AddressTitle = styled.h1`
-    margin-left: 1rem;
+const AddressTitle = styled.p`
+    margin: 1.3rem 0 0 1.3rem;
+    text-size: .5rem;
 `
 
 export default Tracking
