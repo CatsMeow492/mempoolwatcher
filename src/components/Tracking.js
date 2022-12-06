@@ -3,7 +3,7 @@ import axios from 'axios'
 import styled from "styled-components/macro"
 import Modal from "react-modal";
 import './Tracking.css'
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 Modal.setAppElement("#root");
@@ -29,28 +29,6 @@ function Tracking() {
             console.log(err)
         })
     }, [])
-
-    const createNotification = (type) => {
-        return () => {
-          // eslint-disable-next-line default-case
-          switch (type) {
-            case 'info':
-              NotificationManager.info('Info message');
-              break;
-            case 'success':
-              NotificationManager.success('Success message', 'Title here');
-              break;
-            case 'warning':
-              NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
-              break;
-            case 'error':
-              NotificationManager.error('Error message', 'Click me!', 5000, () => {
-                alert('callback');
-              });
-              break;
-          }
-        };
-    }
 
     function toggleModal() {
         setIsOpen(!isOpen);
@@ -144,6 +122,7 @@ function Tracking() {
                     </GlobalFiltersUIMain>
                     <AddressTracker>
                     <SubscriptionContainer>
+                        <Toaster />
                         <label for="address">Address</label>
                         <AddressInput value={address} type="text" id="address" name="address" placeholder="0x..." onChange={(e) => setAddress(e.target.value)}></AddressInput>
                         {/* Verify the address is a valid ethereum address */}
@@ -159,16 +138,16 @@ function Tracking() {
                         // 
                             if (pattern.test(address)) {
                                 setAddressesToTrack(prevState => {
-                                    createNotification('success')
+                                    toast.success("Address added successfully!")
                                     return [...prevState, address]
                                 })
                             } else {
-                                createNotification('error')
-                                alert("The address is not valid.");
+                                toast.error("Address is not valid!")
+                                return
                             }
                         }}
                         >Add Address</button>
-                        <NotificationContainer/>
+                        
 
                         {addressesToTrack.map((address, index) => (
                             <SubscribedAddressContainer key={index}>
