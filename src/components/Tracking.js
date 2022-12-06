@@ -3,6 +3,8 @@ import axios from 'axios'
 import styled from "styled-components/macro"
 import Modal from "react-modal";
 import './Tracking.css'
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+
 
 Modal.setAppElement("#root");
 
@@ -28,6 +30,27 @@ function Tracking() {
         })
     }, [])
 
+    const createNotification = (type) => {
+        return () => {
+          // eslint-disable-next-line default-case
+          switch (type) {
+            case 'info':
+              NotificationManager.info('Info message');
+              break;
+            case 'success':
+              NotificationManager.success('Success message', 'Title here');
+              break;
+            case 'warning':
+              NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
+              break;
+            case 'error':
+              NotificationManager.error('Error message', 'Click me!', 5000, () => {
+                alert('callback');
+              });
+              break;
+          }
+        };
+    }
 
     function toggleModal() {
         setIsOpen(!isOpen);
@@ -60,7 +83,7 @@ function Tracking() {
 
     // Array of Addresses to Track
     const [address, setAddress] = useState('')
-    const [addressesToTrack, setAddressesToTrack] = useState([])
+    const [addressesToTrack, setAddressesToTrack] = useState([])   
 
   return (
     <Body>
@@ -123,15 +146,29 @@ function Tracking() {
                     <SubscriptionContainer>
                         <label for="address">Address</label>
                         <AddressInput value={address} type="text" id="address" name="address" placeholder="0x..." onChange={(e) => setAddress(e.target.value)}></AddressInput>
+                        {/* Verify the address is a valid ethereum address */}
                         <button onClick={() => {
-                            if (!address) {
-                                return
+                            const pattern = new RegExp("^0x[a-fA-F0-9]{40}$");
+                        //     if (!pattern.text(address)){
+                        //         return alert('Please enter a valid address')
+                        //     } else if (pattern.test(address)) {
+                        //     setAddressesToTrack(prevState => {
+                        //         return [...prevState, address]
+                        //     })}
+                        //     setAddress('')
+                        // 
+                            if (pattern.test(address)) {
+                                setAddressesToTrack(prevState => {
+                                    createNotification('success')
+                                    return [...prevState, address]
+                                })
+                            } else {
+                                createNotification('error')
+                                alert("The address is not valid.");
                             }
-                            setAddressesToTrack(prevState => {
-                                return [...prevState, address]
-                            })
-                            setAddress('')
-                        }}>Add Address</button>
+                        }}
+                        >Add Address</button>
+                        <NotificationContainer/>
 
                         {addressesToTrack.map((address, index) => (
                             <SubscribedAddressContainer key={index}>
