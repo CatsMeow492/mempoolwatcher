@@ -15,6 +15,11 @@ function Tracking() {
     const [isOpen, setIsOpen] = useState(false);
     // State for Tx Filters
     const [txFilter, setTxFilter] = useState('all')
+    // Array of Addresses to Track
+    const [address, setAddress] = useState('')
+    const [addressesToTrack, setAddressesToTrack] = useState([])
+    // State for Note
+    const [note, setNote] = useState('')
 
     // Fetch addresseToTrack from API
     useEffect(() => {
@@ -22,6 +27,7 @@ function Tracking() {
         .then(res => {
             // For each object in res.data get address property and add to an array
             const addresses = res.data.Items.map(obj => obj.Address)
+            const notes = res.data.Items.map(obj => obj.Note)
             // Set addresses array to state
             setAddressesToTrack(addresses)
         })
@@ -33,13 +39,14 @@ function Tracking() {
     // Add Address to Track to DynamoDb
     const addAddressToTrack = (e) => {
         axios.post('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses', {
-            Address: address
+            Address: address,
+            Note: note
         })
         .then(res => {
             console.log(res)
             toast.success('Address Added!')
             setAddressesToTrack(prevState => {
-                return [...prevState, address]
+                return [...prevState, {Address: address, Note: note}]
             })
         })
         .catch(err => {
@@ -76,10 +83,6 @@ function Tracking() {
        }, [1000])
     }, [])
 
-    // Array of Addresses to Track
-    const [address, setAddress] = useState('')
-    const [addressesToTrack, setAddressesToTrack] = useState([])
-    
     function deleteAddress(address) {
         const newAddressesToTrack = addressesToTrack.filter(add => add !== address);
         setAddressesToTrack(newAddressesToTrack);
@@ -146,12 +149,27 @@ function Tracking() {
                     <SubscriptionContainer>
                         <Toaster />
                         <label for="address">Address</label>
-                        <AddressInput value={address} type="text" id="address" name="address" placeholder="0x..." onChange={(e) => setAddress(e.target.value)}></AddressInput>
+                        <AddressInput 
+                            value={address} 
+                            type="text" 
+                            id="address" 
+                            name="address" 
+                            placeholder="0x..." 
+                            onChange={(e) => setAddress(e.target.value)}>
+                        </AddressInput>
+                        <NoteInput
+                            value={note}
+                            type="text"
+                            id="note"
+                            name="note"
+                            placeholder=" Note: Ex. Uniswap Address"
+                            onChange={(e) => setNote(e.target.value)}>
+                        </NoteInput>
                         {/* Verify the address is a valid ethereum address */}
                         <button onClick={() => {
                             const pattern = new RegExp("^0x[a-fA-F0-9]{40}$");
                             if (pattern.test(address)) {
-                                addAddressToTrack(address)
+                                addAddressToTrack(address && note)
                             } else {
                                 toast.error("Address is not valid!")
                                 return
@@ -163,7 +181,12 @@ function Tracking() {
                         {addressesToTrack.map((address, index) => (
                             <SubscribedAddressContainer key={index}>
                                 <AddressTitle>{address}</AddressTitle>
-                                <DeleteAddressButton onCLick={() => deleteAddress(address)}>X</DeleteAddressButton>
+                                <Notes>{note}</Notes>
+                                <DeleteAddressButton 
+                                onCLick={() => 
+                                deleteAddress(address)}>
+                                    X
+                                </DeleteAddressButton>
                             </SubscribedAddressContainer>
                         ))}
                     </SubscriptionContainer>
@@ -297,20 +320,36 @@ const AddressInput = styled.input`
     margin-left: .5rem;
 `
 
+const NoteInput = styled.input`
+    margin-left: .5rem;
+`
+
 const SubscribedAddressContainer = styled.div`
     width: 100%;
     height: 2.3rem;
+    margin: .5rem 0 0 0;
     outline: 1px solid black;
     border-radius: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    align-items: flex-end;
 `
 
 const AddressTitle = styled.p`
-    margin: 1.3rem 0 0 1.3rem;
+    margin: .32rem 0 0 1.3rem;
+    text-align: center;
+    font-size: .75rem;
+`
+
+const Notes = styled.p`
+    margin: 0 0 0 1.3rem;
     text-size: .5rem;
+    text-align: center;
 `
 
 const DeleteAddressButton = styled.button`
-    margin: -.7rem 0 0 90%;
     text-size: .5rem;
     border-radius: 25px;
     background-color: red;
@@ -318,6 +357,7 @@ const DeleteAddressButton = styled.button`
     align-self: flex-end;
     text-align: center;
     display: flex;
+    margin: .2rem .5rem 0 0;
 `
 
 export default Tracking
