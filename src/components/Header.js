@@ -1,35 +1,29 @@
-import styled from "styled-components/macro";  
+import React from 'react';
+import styled from 'styled-components/macro';
+import Login from './Login'; // Import the Login component
 
- 
-function Header() {
-    return (
-    <Nav>
-        <NavMenu>
-            <a href='/home'>
-                <img src='/images/coinbase.svg' alt='HOME' />
-            <span>MemPool Watcher</span>
-            </a>            
-        </NavMenu>        
-    </Nav>
-    
-    ) 
+function Header(props) {
+return (
+<Nav>
+<NavMenu>
+<a href="/home">
+<img src="/images/coinbase.svg" alt="HOME" />
+<span>MemPool Watcher</span>
+</a>
+{/* Display the currentAccount prop here /}
+{/ If logged in display the current address if not display the Login components */}
+{props.currentAccount ? (
+<p>Connected with Address: props.currentAccount</p>
+) : (
+<Login onLogin={props.onLogin} onLogout={props.onLogout} />
+)}
+</NavMenu>
+</Nav>
+);
 }
 
-const Nav = styled.nav`
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    background-color: #090b13;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 36px;
-    transform: translateZ(0);
-    transition: opacity 0.5s ease-out; 
-    letter-spacing: 16px;
-    z-index: 3;
+const Nav = styled.nav 
+`position: fixed; top: 0; left: 0; right: 0; height: 70px; background-color: #090b13; display: flex; justify-content: space-between; align-items: center; padding: 0 36px; transform: translateZ(0); transition: opacity 0.5s ease-out; letter-spacing: 16px; z-index: 3;
 `;
 
 
@@ -95,20 +89,6 @@ const NavMenu = styled.div`
     // }
 `;
 
-const Login = styled.a`
-    background-color: rgb(0, 0, 0, 0);
-    border: 1px solid #f9f9f9;
-    border-radius: 4px;
-    padding: 8px 16px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    transition: all .2s ease 0s;
-    &:hover {
-        background-color: #f9f9f9;
-        color: #000;
-        border-color: transparent;
-    }
-`;
 
 const UserImg = styled.img`
     height: 100%;
