@@ -27,9 +27,12 @@ function Tracking() {
         .then(res => {
             // For each object in res.data get address property and add to an array
             const addresses = res.data.Items.map(obj => obj.Address)
-            const notes = res.data.Items.map(obj => obj.Note)
+            const notes = res.data.Items.map(obj => obj.note)
             // Set addresses array to state
             setAddressesToTrack(addresses)
+
+            console.log(addresses)
+            console.log(notes)
         })
         .catch(err => {
             console.log(err)
@@ -38,21 +41,23 @@ function Tracking() {
 
     // Add Address to Track to DynamoDb
     const addAddressToTrack = (e) => {
-        axios.post('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses', {
+        addressesToTrack.forEach((address, index) => {
+          axios.post('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses', {
             Address: address,
             Note: note
-        })
-        .then(res => {
+          })
+          .then(res => {
             console.log(res)
             toast.success('Address Added!')
             setAddressesToTrack(prevState => {
-                return [...prevState, {Address: address, Note: note}]
+              return [...prevState, {Address: address, Note: note}]
             })
-        })
-        .catch(err => {
+          })
+          .catch(err => {
             console.log(err)
-        })
-    }
+          })
+        });
+      };
 
     function toggleModal() {
         setIsOpen(!isOpen);
@@ -87,6 +92,12 @@ function Tracking() {
         const newAddressesToTrack = addressesToTrack.filter(add => add !== address);
         setAddressesToTrack(newAddressesToTrack);
       }
+
+      const addressesAndNotes = addresses.map((address, index) => ({
+        Address: address,
+        Note: notes[index]
+      }));
+      setAddressesToTrack(addressesAndNotes);
 
   return (
     <Body>
@@ -178,17 +189,17 @@ function Tracking() {
                         >Add Address</button>
                         
 
-                        {addressesToTrack.map((address, index) => (
-                            <SubscribedAddressContainer key={index}>
-                                <AddressTitle>{address}</AddressTitle>
-                                <Notes>{note}</Notes>
-                                <DeleteAddressButton 
-                                onCLick={() => 
-                                deleteAddress(address)}>
-                                    X
-                                </DeleteAddressButton>
-                            </SubscribedAddressContainer>
-                        ))}
+                        {addressesToTrack.map((addressAndNote, index) => (
+  <SubscribedAddressContainer key={index}>
+    <AddressTitle>{addressAndNote.Address}</AddressTitle>
+    <Notes>{addressAndNote.Note}</Notes>
+    <DeleteAddressButton 
+      onClick={() => deleteAddress(addressAndNote.Address)}
+    >
+      X
+    </DeleteAddressButton>
+  </SubscribedAddressContainer>
+))}
                     </SubscriptionContainer>
                     </AddressTracker>
                 </GlobalFiltersInner>
