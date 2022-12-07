@@ -93,7 +93,7 @@ aws apigateway create-deployment --rest-api-id pesnn3wxa9 --stage-name api
 
 `
 curl -X GET https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses
-curl -X POST -d '{"Address":"0x01.."}' https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses
+curl -X POST -d '{"Address":"0x01..", "Note":"Hi"}' https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses
 `
 
 aws lambda addAddress --function-name add-addresses --action lambda:InvokeFunction --statement-id sns \

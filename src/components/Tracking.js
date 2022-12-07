@@ -4,13 +4,15 @@ import styled from "styled-components/macro"
 import Modal from "react-modal";
 import './Tracking.css'
 import toast, { Toaster } from 'react-hot-toast';
+import { request } from 'graphql-request'
+import TransactionList from './TransactionList'
+const AWS = require('aws-sdk');
 
 
 Modal.setAppElement("#root");
 
+
 function Tracking() {
-    // State for Transactions Array
-    const [ txns, setTxns ] = useState([]) 
     // State for Modal
     const [isOpen, setIsOpen] = useState(false);
     // State for Tx Filters
@@ -20,44 +22,56 @@ function Tracking() {
     const [addressesToTrack, setAddressesToTrack] = useState([])
     // State for Note
     const [note, setNote] = useState('')
+    // State for Transactions Array
+    const [txns, setTxns] = useState([])
 
-    // Fetch addresseToTrack from API
-    useEffect(() => {
-        axios.get('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses')
-        .then(res => {
-            // For each object in res.data get address property and add to an array
-            const addresses = res.data.Items.map(obj => obj.Address)
-            const notes = res.data.Items.map(obj => obj.note)
-            // Set addresses array to state
-            setAddressesToTrack(addresses)
+// Fetch addresseToTrack from API
+useEffect(() => {
+    axios.get('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses')
+    .then(res => {
+      // For each object in res.data get address and notes properties and add to an array
+      const addresses = res.data.Items.map(obj => obj.Address)
+      const notes = res.data.Items.map(obj => obj.note)
+      // Set addresses array to state
+      setAddressesToTrack(addresses)
+      console.log(res.data)
+      console.log(addresses)
+      console.log(notes)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }, []);
 
-            console.log(addresses)
-            console.log(notes)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-    }, [])
+  const addAddressToTrack = (event) => {
 
+    const addressAndNote = {
+        Address: address,
+        Note: note
+    }
+    const addressesAndNotes = addressesToTrack.map((address, index) => ({
+        Address: address,
+              Note: note[index]
+            }));
+    console.log('addressandNote object is ' + addressAndNote)
     // Add Address to Track to DynamoDb
-    const addAddressToTrack = (e) => {
-        addressesToTrack.forEach((address, index) => {
-          axios.post('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses', {
-            Address: address,
-            Note: note
-          })
-          .then(res => {
-            console.log(res)
-            toast.success('Address Added!')
-            setAddressesToTrack(prevState => {
-              return [...prevState, {Address: address, Note: note}]
-            })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        });
-      };
+    axios
+    .post(
+      "https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses",
+      addressAndNote
+    )
+    .then((res) => {
+      console.log(res);
+      toast.success("Address Added!");
+      setAddressesToTrack((prevState) => {
+        return [...prevState, addressAndNote];
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+  
 
     function toggleModal() {
         setIsOpen(!isOpen);
@@ -69,35 +83,10 @@ function Tracking() {
         setTxFilter(value);
     }
 
-    const fetchData = () => {
-        try {
-            axios.get('http://localhost:3001/transactions-data').then(res => {
-                setTxns(prevState => {
-                    return [...prevState, res.data]
-                })
-            })
-        } catch(e) {
-            console.log(e)
-        }
-    }
-
-
-    useEffect(() => {
-       setInterval(() => {
-            fetchData()
-       }, [1000])
-    }, [])
-
     function deleteAddress(address) {
         const newAddressesToTrack = addressesToTrack.filter(add => add !== address);
         setAddressesToTrack(newAddressesToTrack);
-      }
-
-      const addressesAndNotes = addresses.map((address, index) => ({
-        Address: address,
-        Note: notes[index]
-      }));
-      setAddressesToTrack(addressesAndNotes);
+      }      
 
   return (
     <Body>
@@ -166,19 +155,22 @@ function Tracking() {
                             id="address" 
                             name="address" 
                             placeholder="0x..." 
-                            onChange={(e) => setAddress(e.target.value)}>
+                            onChange={(event) => setAddress(event.target.value)}>
                         </AddressInput>
+                        <label for="note">Note</label>
                         <NoteInput
                             value={note}
                             type="text"
                             id="note"
                             name="note"
                             placeholder=" Note: Ex. Uniswap Address"
-                            onChange={(e) => setNote(e.target.value)}>
+                            onChange={(event) => setNote(event.target.value)}>
                         </NoteInput>
                         {/* Verify the address is a valid ethereum address */}
                         <button onClick={() => {
                             const pattern = new RegExp("^0x[a-fA-F0-9]{40}$");
+                            console.log(pattern.test(address))
+                            console.log(address)
                             if (pattern.test(address)) {
                                 addAddressToTrack(address && note)
                             } else {
