@@ -30,6 +30,23 @@ function Tracking() {
         })
     }, [])
 
+    // Add Address to Track to DynamoDb
+    const addAddressToTrack = (e) => {
+        axios.post('https://pesnn3wxa9.execute-api.us-east-1.amazonaws.com/api/addresses', {
+            Address: address
+        })
+        .then(res => {
+            console.log(res)
+            toast.success('Address Added!')
+            setAddressesToTrack(prevState => {
+                return [...prevState, address]
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
     function toggleModal() {
         setIsOpen(!isOpen);
     }
@@ -133,19 +150,8 @@ function Tracking() {
                         {/* Verify the address is a valid ethereum address */}
                         <button onClick={() => {
                             const pattern = new RegExp("^0x[a-fA-F0-9]{40}$");
-                        //     if (!pattern.text(address)){
-                        //         return alert('Please enter a valid address')
-                        //     } else if (pattern.test(address)) {
-                        //     setAddressesToTrack(prevState => {
-                        //         return [...prevState, address]
-                        //     })}
-                        //     setAddress('')
-                        // 
                             if (pattern.test(address)) {
-                                setAddressesToTrack(prevState => {
-                                    toast.success("Address added successfully!")
-                                    return [...prevState, address]
-                                })
+                                addAddressToTrack(address)
                             } else {
                                 toast.error("Address is not valid!")
                                 return
