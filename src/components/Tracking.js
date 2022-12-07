@@ -61,7 +61,12 @@ function Tracking() {
 
     // Array of Addresses to Track
     const [address, setAddress] = useState('')
-    const [addressesToTrack, setAddressesToTrack] = useState([])   
+    const [addressesToTrack, setAddressesToTrack] = useState([])
+    
+    function deleteAddress(address) {
+        const newAddressesToTrack = addressesToTrack.filter(add => add !== address);
+        setAddressesToTrack(newAddressesToTrack);
+      }
 
   return (
     <Body>
@@ -152,6 +157,7 @@ function Tracking() {
                         {addressesToTrack.map((address, index) => (
                             <SubscribedAddressContainer key={index}>
                                 <AddressTitle>{address}</AddressTitle>
+                                <DeleteAddressButton onCLick={() => deleteAddress(address)}>X</DeleteAddressButton>
                             </SubscribedAddressContainer>
                         ))}
                     </SubscriptionContainer>
@@ -295,6 +301,17 @@ const SubscribedAddressContainer = styled.div`
 const AddressTitle = styled.p`
     margin: 1.3rem 0 0 1.3rem;
     text-size: .5rem;
+`
+
+const DeleteAddressButton = styled.button`
+    margin: -.7rem 0 0 90%;
+    text-size: .5rem;
+    border-radius: 25px;
+    background-color: red;
+    color: white;
+    align-self: flex-end;
+    text-align: center;
+    display: flex;
 `
 
 export default Tracking
