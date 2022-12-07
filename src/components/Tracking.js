@@ -120,13 +120,18 @@ useEffect(() => {
                                                       left: '40px',
                                                       right: '40px',
                                                       bottom: '40px',
+                                                      margin: "10rem auto auto auto",
                                                       border: '1px solid #ccc',
                                                       background: '#fff',
                                                       overflow: 'auto',
                                                       WebkitOverflowScrolling: 'touch',
                                                       borderRadius: '4px',
                                                       outline: 'none',
-                                                      padding: '20px'
+                                                      padding: '20px',
+                                                      width: '35%',
+                                                      height: '25%',
+                                                      display: 'flex',
+                                                    flexDirection: 'column',
                                                     }
                                                   }}
                                                 >
