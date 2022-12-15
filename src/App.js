@@ -1,10 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
+import React, { useState } from "react";
+import { Layout } from 'antd';
 import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Body from "./components/Body";
 import Tracking from "./components/Tracking";
-import { useState } from "react";
-import Login from "./components/Login";
 import Web3 from "web3";
+
+import 'antd/dist/reset.css';
+import "./App.css";
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -33,19 +36,13 @@ function App() {
   };
 
   return (
-      <div className="App">
-
-        <Router>
-          <Header currentAccount={currentAccount} onLogin={onLogin} onLogout={onLogout} />
-          {!isConnected && 
-          (<Login onLogin={onLogin} onLogout={onLogout} />)
-          }
-          <Tracking />
-          <Routes>
-          </Routes>
-        </Router>
-
-      </div>
+    <Layout>
+      <Header currentAccount={currentAccount} onLogin={onLogin} onLogout={onLogout} />
+      <Body>
+        <Tracking />
+      </Body>
+      <Footer />
+    </Layout>
   );
 }
 

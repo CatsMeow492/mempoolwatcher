@@ -5,9 +5,11 @@
   "dependencies": {
     "@3rdweb/hooks": "^1.9.2",
     "@3rdweb/sdk": "^1.42.1",
+    "@ant-design/icons": "^4.8.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.0.7",
     "aws-sdk": "^2.1269.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.1",
@@ -27,6 +29,7 @@
     "react-terminal": "^1.2.8",
     "styled-components": "^5.3.5",
     "terminal-in-react": "^4.3.1",
+    "truncate-eth-address": "^1.0.2",
     "web-vitals": "^2.1.4",
     "web3": "^1.8.1"
   },

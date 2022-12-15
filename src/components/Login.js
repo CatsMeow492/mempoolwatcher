@@ -1,5 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Button } from 'antd';
 
 const Login = (props) => {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -33,9 +33,9 @@ const Login = (props) => {
 
   return (
     <div>
-      <button onClick={() => onLoginHandler()}>
+      <Button type="primary" onClick={() => onLoginHandler()}>
         {isConnecting ? 'Connecting...' : 'Connect'}
-      </button>
+      </Button>
     </div>
   );
 };
