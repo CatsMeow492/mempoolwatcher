@@ -180,7 +180,7 @@ function Tracking() {
   }
 
   function deleteAddress(address) {
-    const newAddressesToTrack = addressesToTrack.filter(add => add !== address);
+    const newAddressesToTrack = addressesToTrack.filter(add => add.Address !== address);
     setAddressesToTrack(newAddressesToTrack);
   }
 
