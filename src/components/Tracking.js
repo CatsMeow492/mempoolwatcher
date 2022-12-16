@@ -5,105 +5,9 @@ import { DeleteOutlined } from '@ant-design/icons'
 import styled from "styled-components/macro"
 import './Tracking.css'
 import toast, { Toaster } from 'react-hot-toast';
+import TransactionList from './TransactionList'
 
-const mockTxns = [
-  {
-    blockHash: null,
-    blockNumber: null,
-    from: '0x38CF69984b90C31C0672781AA47c33CA9b66E2Af',
-    gas: 135229,
-    gasPrice: '14639254009',
-    hash: '0x47a8a3b2a4c9fee30f1bb2a3b40ad53f7eadcbf3c183a6dfbbda2e32f1dbae0f',
-    input: '0x095ea7b30000000000000000000000003fdbd4ed52dca2a3f3deae50b828da448c6107f5ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-    nonce: 45,
-    to: '0x90e188bc18a4A99bC17277Ab512F7462915c1582',
-    transactionIndex: null,
-    value: '0',
-    type: 0,
-    chainId: '0x5',
-    v: '0x2d',
-    r: '0xecdd376471bf9da650f372cc49d6e880d28f36842ab5ad554c52dfa57604975d',
-    s: '0x79c20b72f8de7072f5ec2e5537c14a8876b909639e3e03ffe39727c7c2855af9'
-  },
-  {
-    blockHash: null,
-    blockNumber: null,
-    from: '0x38CF69984b90C31C0672781AA47c33CA9b66E2Af',
-    gas: 135229,
-    gasPrice: '14639254009',
-    hash: '0x47a8a3b2a4c9fee30f1bb2a3b40ad53f7eadcbf3c183a6dfbbda2e32f1dbae0f',
-    input: '0x095ea7b30000000000000000000000003fdbd4ed52dca2a3f3deae50b828da448c6107f5ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-    nonce: 45,
-    to: '0x90e188bc18a4A99bC17277Ab512F7462915c1582',
-    transactionIndex: null,
-    value: '0',
-    type: 0,
-    chainId: '0x5',
-    v: '0x2d',
-    r: '0xecdd376471bf9da650f372cc49d6e880d28f36842ab5ad554c52dfa57604975d',
-    s: '0x79c20b72f8de7072f5ec2e5537c14a8876b909639e3e03ffe39727c7c2855af9'
-  },
-  {
-    blockHash: null,
-    blockNumber: null,
-    from: '0x929f4bB05Bdb68ee71d9A33e334278EE263FcB43',
-    gas: 137017,
-    gasPrice: '14639254009',
-    hash: '0xaaef5ba3f3100f65a4bd126f9902f24b739f028b6de1bbcb622cf788f25958fe',
-    input: '0x095ea7b3000000000000000000000000e76b0df1cd138b5c5abfeac51c3edacf8dd79fb5ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-    nonce: 42,
-    to: '0x90e188bc18a4A99bC17277Ab512F7462915c1582',
-    transactionIndex: null,
-    value: '0',
-    type: 0,
-    chainId: '0x5',
-    v: '0x2e',
-    r: '0xfb9fbfbb3f71e611361cdc4937129811fbd85bda9ed23500ec792ebae24fe2c5',
-    s: '0x2f7f1e13ce16f357c15ebdb7ffca94e5f52c9f4ec0a732a983ee1711833c166e'
-  },
-  {
-    blockHash: null,
-    blockNumber: null,
-    from: '0x75A634bD27e41dE0c556555479Cba95eFCC39f16',
-    gas: 21632,
-    gasPrice: '20351254443',
-    maxFeePerGas: '20351254443',
-    maxPriorityFeePerGas: '1500000000',
-    hash: '0xe775338c079b80a906186ed42a4378e96334eae73ef2bac08c5633f9466b419a',
-    input: '0x095ea7b3000000000000000000000000a0b5cbdc4d14c4f4d36483ec0de310919f3b2d9000000000000000000000000000000000000000000000000029a2241af62c0000',
-    nonce: 4,
-    to: '0x000080383847bD75F91c168269Aa74004877592f',
-    transactionIndex: null,
-    value: '0',
-    type: 2,
-    accessList: [],
-    chainId: '0x5',
-    v: '0x1',
-    r: '0x6564b7e718324ecf542e7ecee9dc966e11aebfe6071a67427f5c1918ef83b814',
-    s: '0x46b974a6c43b7126b64083ee012430807b77774ffeb59e6d2c7cc37d0b447458'
-  },
-  {
-    blockHash: null,
-    blockNumber: null,
-    from: '0x1B03463FE6793961c3a24cC98bC835909A3aAC95',
-    gas: 153535,
-    gasPrice: '28205526940',
-    maxFeePerGas: '28205526940',
-    maxPriorityFeePerGas: '1000000000',
-    hash: '0x65a0aeb230695a4707683a0dc11c9871ca6a0f734f66889f439fc4b7e0a23be1',
-    input: '0xa0712d680000000000000000000000000000000000000000000000000000000000000001',
-    nonce: 38,
-    to: '0xd706B27C9f0D14D32209e560140130aD10FC7Aa8',
-    transactionIndex: null,
-    value: '0',
-    type: 2,
-    accessList: [],
-    chainId: '0x5',
-    v: '0x1',
-    r: '0x39a68e0b39b4b76cdf88f30f0a556d9060c3c677a9ab0598623a1b3fc8523a3d',
-    s: '0xbd3ef1f643290c1c143d8d0a8a9d811937eaeb6ff72d60b62f15fc80d4e62f'
-  }
-]
+const mockTxns = []
 
 function Tracking() {
   // State for Modal
@@ -117,6 +21,19 @@ function Tracking() {
   const [note, setNote] = useState('')
   // State for Transactions Array
   const [txns, setTxns] = useState(mockTxns)
+
+  // Fetch transactions from API
+  const fetchData = () => {
+    try {
+      axios.get("http://localhost:3001/transactions-data").then((res) => {
+        setTxns((prevState) => {
+          return [...prevState, res.data];
+        });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // Fetch addresseToTrack from API
   useEffect(() => {
@@ -260,6 +177,9 @@ function Tracking() {
         </div>
       </UserInterface>
       <Output>
+      {setInterval(() => {
+         fetchData();
+        }, 1000)}
         {txns.slice(-15).map((txn, index) => (
           <TxnWrapper key={index}>
             {/* {JSON.stringify(txn)} */}
